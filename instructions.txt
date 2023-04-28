@@ -1,0 +1,11 @@
+Polku
+
+Polku on peli, jossa pelaajan on tarkoituksena saada vihreät pelinappulat yläriviltä alariville sekä punaiset pelinappulat alariviltä yläriville eli pelin voittaminen vaatii, että pelinappuloiden tulee olla päinvastaisessa järjestyksessä.
+
+Pelinappuloita ei saa siirtää toistensa yli, vaan siirrot tulee tehdä vapaiden paikkojen muodostamaa polkua pitkin. Pelinappulaa ei voi myöskään siirtää paikalle, jossa on jo jokin pelinappula, vaan pelinappula on aina siirrettävä vapaalle paikalle. Pelissä ilmoitetaan virheellisistä siirroista eikä niiden tekeminen ole mahdollista.
+
+Pelin alussa käytettävissäsi on vain Start ja Close napit. Close nappi sulkee koko ohjelman ja Start nappia painamalla pääset aloittamaan pelaamisen, jolloin ajastin käynnistyy, pelinappulat tulevat käyttöösi ja myös pääset halutessasi aloittamaan pelin uudelleen klikkaamalla Reset nappia. Reset nappia klikkaamalla koko peli alkaa alusta ja ajastin lähtee heti päälle.
+
+Pelinappula valitaan klikkaamalla sitä nappulaa, jonka haluat siirtää sekä tämän jälkeen sitä paikkaa, johon haluat nappulan siirtyvän. Jos virheellistä siirtoa yritetään, tulee ilmoitus ja pelinappulan valinta poistuu ja pelinappula tulee valita uudelleen. Tässä vaiheessa voit kuitenkin valita toisen pelinappulan.
+
+Pelin voitettuasi näytölle pysähtyy aika sekä siirtojen määrä ja pelinappulat poistuvat käytöstäsi. Jos haluat voiton jälkeen pelata uudelleen, voit aloittaa pelin klikkaamalla Reset nappia, jolloin peli alkaa alusta.
