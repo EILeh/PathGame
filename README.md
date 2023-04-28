@@ -15,8 +15,8 @@ alussa.
 Alku:
 Pelin alussa vihreät painikkeet ovat pelialustan yläreunassa ja punaiset pai-
 nikkeet ovat pelialustan alareunassa. Pelissä on ajastin, joka näyttää peliin
-kuluneet minuutit ja sekunnit sekä laskuri, joka laskee tehdyt siirrot. Al-
-kuun pelinappulat ovat pois käytöstä, kunnes käyttäjä klikkaa Start, jolloin
+kuluneet minuutit ja sekunnit sekä laskuri, joka laskee tehdyt siirrot. Alkuun
+pelinappulat ovat pois käytöstä, kunnes käyttäjä klikkaa Start, jolloin
 peli alkaa. Start-painiketta klikkaamalla ajastin käynnistuu ja pelinappuloi-
 den siirtäminen on mahdollista.
 
