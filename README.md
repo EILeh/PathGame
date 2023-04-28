@@ -2,15 +2,10 @@ Polku
 
 VÄRIT:
 harmaa: #e4e4e4
-
 punainen: #f28383
-
 punainen valittu: #9f4e4e
-
 vihreä: #93ed95
-
 vihreä valittu: #2b722d
-
 
 Kuvaus:
 Polku on peli, jossa käyttäjän on tarkoituksena siirrellä vihreitä ja punai-
