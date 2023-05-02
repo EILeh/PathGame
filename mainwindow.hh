@@ -28,9 +28,9 @@
  * nikkeen klikkaamalla painiketta sekä harmaan kohdan, johon hän sen haluaa
  * siirtää klikkaamalla harmaata painiketta. Painikkeita ei voi siirtää toisten-
  * sa yli eli värillisen painikkeen voi siirtää vain harmaita painikkeita pit-
- * kin. Myöskään toisen värillisen painikkeen päälle voi laittaa painiketta ei-
- * kä harmaata painiketta ole mahdollistaa siirtää. Ohjelma myös ilmoittaa vir-
- * heellisistä siirroista.
+ * kin. Myöskään toisen värillisen painikkeen päälle ei voi laittaa painiketta
+ * eikä harmaata painiketta ole mahdollistaa siirtää. Ohjelma myös ilmoittaa
+ * virheellisistä siirroista.
  *
  *
  * Pelin päättyminen:
@@ -106,11 +106,11 @@ private:
     // sen mukaan totuusarvon.
     bool gameStatus();
 
-    // Alustetaan osoitin, joka osoittaa olioon, jonka tyyppi on GameBoard.
+    // Alustetaan osoitin, joka osoittaa GameBoard tyyppiseen olioon.
     GameBoard *gameBoard_;
 
-    // Painikkeen sijainti, jonka avulla voidaan asettaa kaikki painikkeet ta-
-    // saisesti pelilaudalle.
+    // Vakio painikkeen sijainnista, jonka avulla voidaan asettaa kaikki painik-
+    // keet tasaisesti pelilaudalle.
     const int BUTTONPOSITION = 70;
 
     // Vakio, jolla jakamalla saadaan sarakkeiden oikea sijainti.
@@ -123,7 +123,7 @@ private:
     const int EIGHTBUTTONSWITHPOSITION = 8;
 
     // Vakio, joka kertoo, että viidellä painikkeella on jo sijainti.
-    const int FIVEBUTTONWITHPOSITION = 5;
+    const int FIVEBUTTONSWITHPOSITION = 5;
 
     // Vakio yhden painikkeen yhden sivu pituudesta.
     const int SIDELENGTH = 60;
@@ -137,12 +137,12 @@ private:
     // Muuttuja, jonka avulla saadaan selville kulunut aika.
     int time_ = 0;
 
-    // Tarkistaa, mikä on siirrettävän painikkeen alkusijainti ja palauttaa tie-
-    // don painikkeen sijainnista.
+    // Tarkistaa, mikä on painikkeen sijainti, johon selectedButton_ halutaan
+    // siirtää ja palauttaa tiedon painikkeen kohdesijainnista.
     Point checkDestionation(QPushButton *button);
 
-    // Tarkistaa, mikä on painikkeen sijainti, johon selectedButton_ halutaan
-    // siirtää ja palauttaa tiedon painikkeen sijainnista.
+    // Tarkistaa, mikä on siirrettävän painikkeen alkusijainti ja palauttaa tie-
+    // don painikkeen alkusijainnista.
     Point checkStartPosition();
 
     // Osoitin, joka osoittaa siihen painikkeeseen, jonka käyttäjä on valinnut.
@@ -157,6 +157,11 @@ private:
 
     // Muodostaa pelilaudan sekä määrittä ominaisuudet painikkeille.
     void initButtons();
+
+    // Käyttäjän voittaessa pelin funktio antaa hänelle ilmoituksen, pysäyttää
+    // ajastimen sekä ottaa pelinappulat pois käytöstä, jolloin käyttäjä ei
+    // pysty enää tekemään siirtoja.
+    void gameWon();
 
     // Tarkistaa voiko käyttäjän valitsemaa painiketta siirtää paikalle, johon
     // hän sen haluaa. Tekee toiminnon sen mukaan, mitä funktiosta move
@@ -191,6 +196,10 @@ private:
     // startTimer.
     void resetGameBoard();
 
+    // Asettaa writtenText_ arvoksi tyhjän merkkijonon siltä varalta, että ai-
+    // kaisempi siirto olisi aiheuttanut sen lisäämisen.
+    void resetText();
+
     // Tarkistaa onko selectedButton_ muuttujassa jo painike eli onko käyttäjä
     // jo valinnut siirrettävän painikkeen. Jos painiketta ei ole valittu eli
     // muuttujan selectedButton_ arvo on nullptr, asetetaan klikatun painikkeen
@@ -200,10 +209,18 @@ private:
     // mahdollinen.
     void selectButton(QPushButton *button);
 
-    // Käy läpi vektorin buttons_, joka sisältää tiedon kaikista painikkeista ja
+    // Käy läpi vektori buttons_, joka sisältää tiedon kaikista painikkeista ja
     // asettaa painikkeet joko käytettäviksi tai pois käytöstä sen perusteella,
     // mikä on parametrin isButtonEnabled totuusarvo.
     void setButtonsEnabled(bool isButtonEnabled);
+
+    // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1 ar-
+    // von, joka oli aiemmin muutettu toisena klikatun painikkeen ominaisuuden
+    // "color" arvo. Asettaa myös button ominaisuuden "color" arvoksi muuttujan
+    // color2 arvon, joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen
+    // ominaisuuden "color" arvo.
+    void setPropertyToButton(QString color1, QString color2,
+                             QPushButton *button);
 
 };
 #endif // MAINWINDOW_HH

@@ -15,12 +15,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     timer = new QTimer(parent);
     gameBoard_ = new GameBoard;
+
     connect(timer, &QTimer::timeout, this, &MainWindow::updateLcd);
 
     connect(ui->pushButtonStart, &QPushButton::clicked, this,
             &MainWindow::startTimer);
+
     connect(ui->pushButtonReset, &QPushButton::clicked, this,
             &MainWindow::resetGame);
+
     connect(ui->pushButtonClose, &QPushButton::clicked, this,
             &MainWindow::closeGame);
 
@@ -35,6 +38,7 @@ MainWindow::~MainWindow()
 }
 
 
+// Pelissä käytetyt värikoodit tarkentamaan, mitä mikäkin koodi tarkoittaa.
 // VÄRIT:
 // harmaa: #e4e4e4
 // punainen: #f28383
@@ -48,7 +52,7 @@ void MainWindow::initButtons()
 {
     // Asettaa napeille paikat ja koot käymällä läpi for-loopissa nappien
     // määrän.
-    for (int i = 0; i < 12; i++)
+    for ( int i = 0; i < 12; i++ )
     {
         // Luo uuden painikkeen button ja asettaa sille vakiokoon käyttämällä
         // QWidget-luokkaan kuuluvaa setFixedSize-metodia.
@@ -59,7 +63,7 @@ void MainWindow::initButtons()
         // Asettaa neljälle painikkeelle ominaisuudet metodilla setProperty si-
         // ten, että ensimmäisenä parametrina on ominaisuuden nimi "color" ja
         // toisena parametrina ominaisuuden "color" arvo eli "green".
-        if (i < 4)
+        if ( i < 4 )
         {
             button->setProperty("color", "green");
 
@@ -78,7 +82,7 @@ void MainWindow::initButtons()
         // Asettaa yksittäiselle painikkeelle ominaisuuden metodilla setProperty
         // siten, että ensimmäisenä parametrina on ominaisuuden nimi "color" ja
         // toisena parametrina ominaisuuden "color" arvo eli "gray".
-        else if (i == 4)
+        else if ( i == 4 )
         {
             button->setProperty("color", "gray");
 
@@ -95,7 +99,7 @@ void MainWindow::initButtons()
         // Asettaa neljälle painikkeelle ominaisuudet metodilla setProperty si-
         // ten, että ensimmäisenä parametrina on ominaisuuden nimi "color" ja
         // toisena parametrina ominaisuuden "color" arvo eli "gray".
-        else if (i < 8)
+        else if ( i < 8 )
         {
             button->setProperty("color", "gray");
 
@@ -111,13 +115,13 @@ void MainWindow::initButtons()
             // Saatuun lukuun lisätään vielä vakio BUTTONPOSITION, jotta painik-
             // keet saadaan asetettua vierekkäin tasaisin välein.
             button->move(BUTTONPOSITION, BUTTONPOSITION *
-                         (i - FIVEBUTTONWITHPOSITION) + BUTTONPOSITION);
+                         (i - FIVEBUTTONSWITHPOSITION) + BUTTONPOSITION);
         }
 
         // Asettaa neljälle painikkeelle ominaisuudet metodilla setProperty si-
         // ten, että ensimmäisenä parametrina on ominaisuuden nimi "color" ja
         // toisena parametrina ominaisuuden "color" arvo eli "red".
-        else if (i < 12)
+        else if ( i < 12 )
         {
 
             button->setProperty("color", "red");
@@ -144,10 +148,7 @@ void MainWindow::initButtons()
         // aktivoituu lambda-funktio ja kutsuu funktiota selectButton.
         connect(button, &QPushButton::clicked, [this, button]()
         {
-
-
             selectButton(button);
-
         });
 
         // Lisää painikkeet vektoriin buttons_, jotta niiden alkuperäiset si-
@@ -174,21 +175,21 @@ void MainWindow::selectButton(QPushButton *button)
 {
     // Jos selectedButton_ arvo on nullptr, käyttäjä ei ole vielä klikannut pai-
     // niketta, jonka haluaa siirtää.
-    if (selectedButton_ == nullptr)
+    if ( selectedButton_ == nullptr )
     {
         // Tallennetaan muuttujaan color tieto painikkeen button ominaisuuden
         // "color" arvo merkkijonona.
         QString color = button->property("color").toString();
 
         // Jos color arvo on "green", muutetaan painikkeen väriä.
-        if (color == "green")
+        if ( color == "green" )
         {
             // vihreä valittu: #2b722d
             button->setStyleSheet("background-color: #2b722d");
         }
 
         // Jos color arvo on "red", muutetaan painikkeen väriä.
-        else if (color == "red")
+        else if ( color == "red" )
         {
             // punainen valittu: #9f4e4e
             button->setStyleSheet("background-color: #9f4e4e");
@@ -230,36 +231,29 @@ void MainWindow::selectButton(QPushButton *button)
         // Jos color1 arvo on "green" ja color2 arvo on "gray" kutsutaan funk-
         // tiota greenToGray. Tarkistetaan, onko tehty siirto voittosiirto kut-
         // sumalla funktiota gameStatus.
-        if (color1 == "green" && color2 == "gray")
+        if ( color1 == "green" && color2 == "gray" )
         {
             greenToGray(color1, color2, button);
+
             if ( gameStatus() )
             {
-                // Jos funktio gameStatus palauttaa arvon true, ilmoitetaan pe-
-                // laajalle, että hän on voittanut.
-                writtenText_ = "You Won!";
-                ui->labelInfo->setText(writtenText_);
-
-                // Pysäyttää ajastimen, jotta käyttäjä näkee aikansa.
-                timer->stop();
-
-                // Asetetaan pelin päättymisen jälkeen kaikki napit pois käy-
-                // töstä, kunnes käyttäjä klikkaa joko Reset.
-                setButtonsEnabled(false);
+                // Jos funktio gameStatus palauttaa totuusarvon true, kutsutaan
+                // funktiota gameWon.
+                gameWon();
 
             }
         }
 
         // Jos color1 arvo on "greeen" ja color2 arvo on "green" kutsutaan funk-
         // tiota greenToGray.
-        else if (color1 == "green" && color2 == "green")
+        else if ( color1 == "green" && color2 == "green" )
         {
             greenToGreen(color1, color2, button);
         }
 
         // Jos color1 arvo on "green" ja color2 arvo on "red" kutsutaan funk-
         // tiota greenToGray.
-        else if (color1 == "green" && color2 == "red")
+        else if ( color1 == "green" && color2 == "red" )
         {
             greenToRed(color1, color2, button);
         }
@@ -267,36 +261,29 @@ void MainWindow::selectButton(QPushButton *button)
         // Jos color1 arvo on "red" ja color2 arvo on "gray" kutsutaan funk-
         // tiota greenToGray. Tarkistetaan, onko tehty siirto voittosiirto kut-
         // sumalla funktiota gameStatus.
-        else if (color1 == "red" && color2 == "gray")
+        else if ( color1 == "red" && color2 == "gray" )
         {
             redToGray(color1, color2, button);
+
             if ( gameStatus() )
             {
-                // Jos funktio gameStatus palauttaa arvon true, ilmoitetaan pe-
-                // laajalle, että hän on voittanut.
-                writtenText_ = "You Won!";
-                ui->labelInfo->setText(writtenText_);
-
-                // Pysäyttää ajastimen, jotta käyttäjä näkee aikansa.
-                timer->stop();
-
-                // Asetetaan pelin päättymisen jälkeen kaikki napit pois käy-
-                // töstä, kunnes käyttäjä klikkaa Reset.
-                setButtonsEnabled(false);
+                // Jos funktio gameStatus palauttaa totuusarvon true, kutsutaan
+                // funktiota gameWon.
+                gameWon();
 
             }
         }
 
         // Jos color1 arvo on "red" ja color2 arvo on "red" kutsutaan funk-
         // tiota greenToGray.
-        else if (color1 == "red" && color2 == "red")
+        else if ( color1 == "red" && color2 == "red" )
         {
             redToRed(color1, color2, button);
         }
 
         // Jos color1 arvo on "red" ja color2 arvo on "green" kutsutaan funk-
         // tiota greenToGray.
-        else if (color1 == "red" && color2 == "green")
+        else if ( color1 == "red" && color2 == "green" )
         {
             redToGreen(color1, color2, button);
         }
@@ -308,6 +295,22 @@ void MainWindow::selectButton(QPushButton *button)
     }
 }
 
+
+// Käyttäjän voittaessa pelin funktio antaa hänelle ilmoituksen, pysäyttää ajas-
+// timen eikä käyttäjä pystyy enää tekemään siirtoja.
+void MainWindow::gameWon()
+{
+    // Ilmoitetaan pelaajalle, että hän on voittanut.
+    writtenText_ = "You Won!";
+    ui->labelInfo->setText(writtenText_);
+
+    // Pysäyttää ajastimen, jotta käyttäjä näkee aikansa.
+    timer->stop();
+
+    // Asetetaan pelin päättymisen jälkeen kaikki napit pois käy-
+    // töstä, kunnes käyttäjä klikkaa joko Reset.
+    setButtonsEnabled(false);
+}
 
 // Tarkistaa onko käyttäjän viimeisin siirto ollut voittosiirto ja palauttaa sen
 // mukaan totuusarvon.
@@ -346,8 +349,7 @@ Point MainWindow::checkStartPosition()
 
     // Annetaan muuttujalle startColumn tieto, joka sisältää valitun painikkeen
     // alkusijainnin sarakkeella.
-    int startColumn = selectedButton_->pos().x() /
-            GETCORRECTCOLUMNPOSITION;
+    int startColumn = selectedButton_->pos().x() / GETCORRECTCOLUMNPOSITION;
 
     // Koska sarakkeita on laudalla neljä, mutta laskeminen alkaa jo nollasta,
     // täytyy tehdä ehto, joka tarkistaa, että painikkeen rivin alkusijainti on
@@ -383,8 +385,7 @@ Point MainWindow::checkDestionation(QPushButton *button)
 
     // Annetaan muuttujalle destinationColumn, joka sisältää painikkeen, johon
     // valittu nappi halutaan siirtää, tieto sen alkusijainnista sarakkeella.
-    int destinationColumn = button->pos().x() /
-            GETCORRECTCOLUMNPOSITION;
+    int destinationColumn = button->pos().x() / GETCORRECTCOLUMNPOSITION;
 
     // Koska sarakkeita on laudalla neljä, mutta laskeminen alkaa jo nollasta,
     // täytyy tehdä ehto, joka tarkistaa, että painikkeen rivin alkusijainti on
@@ -402,14 +403,39 @@ Point MainWindow::checkDestionation(QPushButton *button)
 }
 
 
+// Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1 arvon,
+// joka oli aiemmin muutettu toisena klikatun painikkeen ominaisuuden "color"
+// arvo. Asettaa myös button ominaisuuden "color" arvoksi muuttujan color2 ar-
+// von, joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominaisuuden
+// "color" arvo.
+void MainWindow::setPropertyToButton(QString color1, QString color2,
+                                     QPushButton *button)
+{
+    selectedButton_->setProperty("color", color1);
+    button->setProperty("color", color2);
+
+}
+
+
+// Asettaa writtenText_ arvoksi tyhjän merkkijonon siltä varalta, että aikaisem-
+// pi siirto olisi aiheuttanut sen lisäämisen.
+void MainWindow::resetText()
+{
+    // Poistetaan mahdollinen teksti.
+    writtenText_ = "";
+    ui->labelInfo->setText(writtenText_);
+}
+
+
 // Tarkistaa voiko käyttäjän valitsemaa painiketta siirtää paikalle, johon hän
 // sen haluaa. Tekee toiminnon sen mukaan, mitä funktiosta move palautuu.
 void MainWindow::greenToGray(QString color1, QString color2,
                              QPushButton *button)
 {
-    // Poistetaan mahdollinen teksti.
-    writtenText_ = "";
-    ui->labelInfo->setText(writtenText_);
+
+    // Kutsutaan funktiota resetText, joka poistaa tekstin, jos sellainen on
+    // lisätty.
+    resetText();
 
     // Tallennetaan muuttujaan start tieto valitun painikkeen alkusijainnista.
     // Alkusijainti saadaan kutsumalla funktiota checkStartPosition.
@@ -422,7 +448,8 @@ void MainWindow::greenToGray(QString color1, QString color2,
     // Jos move funktio palauttaa arvon true, on tehtävä siirto sallittu ja voi-
     // daan se myös tehdä. Vaihdetaan painikkeiden värit keskenään sekä kutsu-
     // taan funktiota moveCounter.
-    if (gameBoard_->move(start, destination)) {
+    if ( gameBoard_->move(start, destination) )
+    {
         // harmaa: #e4e4e4
         // vihreä: #93ed95
         selectedButton_->setStyleSheet("background-color: #e4e4e4;");
@@ -441,15 +468,8 @@ void MainWindow::greenToGray(QString color1, QString color2,
         // Muuttujan selectedButton_ väri muutetaan takaisin väriksi #93ed95.
         selectedButton_->setStyleSheet("background-color: #93ed95;");
 
-        // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1
-        // arvon, joka oli aiemmin muutettu toisena klikatun painikkeen ominai-
-        // suuden "color" arvo.
-        selectedButton_->setProperty("color", color1);
-
-        // Asettaa button ominaisuuden "color" arvoksi muuttujan color2 arvon,
-        // joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominai-
-        // suuden "color" arvo.
-        button->setProperty("color", color2);
+        // Kutsutaan funktiota setPropertyToButton.
+        setPropertyToButton(color1, color2, button);
     }
 }
 
@@ -458,9 +478,9 @@ void MainWindow::greenToGray(QString color1, QString color2,
 void MainWindow::greenToGreen(QString color1, QString color2,
                               QPushButton *button)
 {
-    // Poistetaan mahdollinen teksti.
-    writtenText_ = "";
-    ui->labelInfo->setText(writtenText_);
+    // Kutsutaan funktiota resetText, joka poistaa tekstin, jos sellainen on
+    // lisätty.
+    resetText();
 
     // Tallennetaan muuttujaan start tieto valitun painikkeen alkusijainnista.
     // Alkusijainti saadaan kutsumalla funktiota checkStartPosition.
@@ -478,15 +498,8 @@ void MainWindow::greenToGreen(QString color1, QString color2,
         // Muuttujan selectedButton_ väri muutetaan takaisin väriksi #93ed95.
         selectedButton_->setStyleSheet("background-color: #93ed95;");
 
-        // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1
-        // arvon, joka oli aiemmin muutettu toisena klikatun painikkeen ominai-
-        // suuden "color" arvo.
-        selectedButton_->setProperty("color", color1);
-
-        // Asettaa button ominaisuuden "color" arvoksi muuttujan color2 arvon,
-        // joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominai-
-        // suuden "color" arvo.
-        button->setProperty("color", color2);
+        // Kutsutaan funktiota setPropertyToButton.
+        setPropertyToButton(color1, color2, button);
 
         // Asetetaan muuttujan selectedButton_ arvoksi nullptr, jotta käyttäjä
         // voi taas valita uuden siirrettävän painikkeen.
@@ -503,15 +516,8 @@ void MainWindow::greenToGreen(QString color1, QString color2,
     writtenText_ = "Choose an empty spot!";
     ui->labelInfo->setText(writtenText_);
 
-    // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1
-    // arvon, joka oli aiemmin muutettu toisena klikatun painikkeen ominai-
-    // suuden "color" arvo.
-    selectedButton_->setProperty("color", color1);
-
-    // Asettaa button ominaisuuden "color" arvoksi muuttujan color2 arvon,
-    // joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominai-
-    // suuden "color" arvo.
-    button->setProperty("color", color2);
+    // Kutsutaan funktiota setPropertyToButton.
+    setPropertyToButton(color1, color2, button);
 
 }
 
@@ -520,9 +526,9 @@ void MainWindow::greenToGreen(QString color1, QString color2,
 // funktio antaa ilmoituksen, että siirto ei ole mahdollinen.
 void MainWindow::greenToRed(QString color1, QString color2, QPushButton *button)
 {
-    // Poistetaan mahdollinen teksti.
-    writtenText_ = "";
-    ui->labelInfo->setText(writtenText_);
+    // Kutsutaan funktiota resetText, joka poistaa tekstin, jos sellainen on
+    // lisätty.
+    resetText();
 
     // Jos käyttäjä klikkaa kahta eri vihreää painiketta, asetaan valitun pai-
     // nikkeen väriksi #93ed95 ja annetaan ilmoitus, että paikka, johon pai-
@@ -531,15 +537,8 @@ void MainWindow::greenToRed(QString color1, QString color2, QPushButton *button)
     writtenText_ = "Choose an empty spot!";
     ui->labelInfo->setText(writtenText_);
 
-    // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1
-    // arvon, joka oli aiemmin muutettu toisena klikatun painikkeen ominai-
-    // suuden "color" arvo.
-    selectedButton_->setProperty("color", color1);
-
-    // Asettaa button ominaisuuden "color" arvoksi muuttujan color2 arvon,
-    // joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominai-
-    // suuden "color" arvo.
-    button->setProperty("color", color2);
+    // Kutsutaan funktiota setPropertyToButton.
+    setPropertyToButton(color1, color2, button);
 
 }
 
@@ -548,9 +547,9 @@ void MainWindow::greenToRed(QString color1, QString color2, QPushButton *button)
 // sen haluaa. Tekee toiminnon sen mukaan, mitä funktiosta move palautuu.
 void MainWindow::redToGray(QString color1, QString color2, QPushButton *button)
 {
-    // Poistetaan mahdollinen teksti.
-    writtenText_ = "";
-    ui->labelInfo->setText(writtenText_);
+    // Kutsutaan funktiota resetText, joka poistaa tekstin, jos sellainen on
+    // lisätty.
+    resetText();
 
     // Tallennetaan muuttujaan start tieto valitun painikkeen alkusijainnista.
     // Alkusijainti saadaan kutsumalla funktiota checkStartPosition.
@@ -563,7 +562,8 @@ void MainWindow::redToGray(QString color1, QString color2, QPushButton *button)
     // Jos move funktio palauttaa arvon true, on tehtävä siirto sallittu ja voi-
     // daan se myös tehdä. Vaihdetaan painikkeiden värit keskenään sekä kutsu-
     // taan funktiota moveCounter.
-    if (gameBoard_->move(start, destination)) {
+    if ( gameBoard_->move(start, destination) )
+    {
         // harmaa: #e4e4e4
         // punainen: #f28383
         selectedButton_->setStyleSheet("background-color: #e4e4e4;");
@@ -581,15 +581,8 @@ void MainWindow::redToGray(QString color1, QString color2, QPushButton *button)
         // Muuttujan selectedButton_ väri muutetaan takaisin väriksi #f28383
         selectedButton_->setStyleSheet("background-color: #f28383;");
 
-        // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1
-        // arvon, joka oli aiemmin muutettu toisena klikatun painikkeen ominai-
-        // suuden "color" arvo.
-        selectedButton_->setProperty("color", color1);
-
-        // Asettaa button ominaisuuden "color" arvoksi muuttujan color2 arvon,
-        // joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominai-
-        // suuden "color" arvo.
-        button->setProperty("color", color2);
+        // Kutsutaan funktiota setPropertyToButton.
+        setPropertyToButton(color1, color2, button);
 
     }
 }
@@ -599,9 +592,9 @@ void MainWindow::redToGray(QString color1, QString color2, QPushButton *button)
 // siirtää punaista painikettä toisen punaisen painikkeen paikalle.
 void MainWindow::redToRed(QString color1, QString color2, QPushButton *button)
 {
-    // Poistetaan mahdollinen teksti.
-    writtenText_ = "";
-    ui->labelInfo->setText(writtenText_);
+    // Kutsutaan funktiota resetText, joka poistaa tekstin, jos sellainen on
+    // lisätty.
+    resetText();
 
     // Tallennetaan muuttujaan start tieto valitun painikkeen alkusijainnista.
     // Alkusijainti saadaan kutsumalla funktiota checkStartPosition.
@@ -619,15 +612,8 @@ void MainWindow::redToRed(QString color1, QString color2, QPushButton *button)
         // Muuttujan selectedButton_ väri muutetaan takaisin väriksi #f28383
         selectedButton_->setStyleSheet("background-color: #f28383;");
 
-        // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1
-        // arvon, joka oli aiemmin muutettu toisena klikatun painikkeen ominai-
-        // suuden "color" arvo.
-        selectedButton_->setProperty("color", color1);
-
-        // Asettaa button ominaisuuden "color" arvoksi muuttujan color2 arvon,
-        // joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominai-
-        // suuden "color" arvo.
-        button->setProperty("color", color2);
+        // Kutsutaan funktiota setPropertyToButton.
+        setPropertyToButton(color1, color2, button);
 
         // Asetetaan muuttujan selectedButton_ arvoksi nullptr, jotta käyttäjä
         // voi taas valita uuden siirrettävän painikkeen.
@@ -644,15 +630,8 @@ void MainWindow::redToRed(QString color1, QString color2, QPushButton *button)
     writtenText_ = "Choose an empty spot!";
     ui->labelInfo->setText(writtenText_);
 
-    // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1
-    // arvon, joka oli aiemmin muutettu toisena klikatun painikkeen ominai-
-    // suuden "color" arvo.
-    selectedButton_->setProperty("color", color1);
-
-    // Asettaa button ominaisuuden "color" arvoksi muuttujan color2 arvon,
-    // joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominai-
-    // suuden "color" arvo.
-    button->setProperty("color", color2);
+    // Kutsutaan funktiota setPropertyToButton.
+    setPropertyToButton(color1, color2, button);
 
 }
 
@@ -661,9 +640,9 @@ void MainWindow::redToRed(QString color1, QString color2, QPushButton *button)
 // funktio antaa ilmoituksen, että siirto ei ole mahdollinen.
 void MainWindow::redToGreen(QString color1, QString color2, QPushButton *button)
 {
-    // Poistetaan mahdollinen teksti.
-    writtenText_ = "";
-    ui->labelInfo->setText(writtenText_);
+    // Kutsutaan funktiota resetText, joka poistaa tekstin, jos sellainen on
+    // lisätty.
+    resetText();
 
     // Jos käyttäjä klikkaa kahta eri vihreää painiketta, asetaan valitun pai-
     // nikkeen väriksi #93ed95 ja annetaan ilmoitus, että paikka, johon pai-
@@ -672,15 +651,8 @@ void MainWindow::redToGreen(QString color1, QString color2, QPushButton *button)
     writtenText_ = "Choose an empty spot!";
     ui->labelInfo->setText(writtenText_);
 
-    // Asettaa selectedButton_ ominaisuuden "color" arvoksi muuttujan color1
-    // arvon, joka oli aiemmin muutettu toisena klikatun painikkeen ominai-
-    // suuden "color" arvo.
-    selectedButton_->setProperty("color", color1);
-
-    // Asettaa button ominaisuuden "color" arvoksi muuttujan color2 arvon,
-    // joka oli aiemmin muutettu ensimmäisenä klikatun painikkeen ominai-
-    // suuden "color" arvo.
-    button->setProperty("color", color2);
+    // Kutsutaan funktiota setPropertyToButton.
+    setPropertyToButton(color1, color2, button);
 
 }
 
@@ -749,21 +721,20 @@ void MainWindow::resetGame()
     amountOfMoves_ = 0;
     ui->lcdNumberMoveCounter->display(0);
 
-    // Poistetaan mahdollinen teksti.
-    writtenText_ = "";
-    ui->labelInfo->setText(writtenText_);
+    // Kutsutaan funktiota resetText, joka poistaa tekstin, jos sellainen on
+    // lisätty.
+    resetText();
 
     // Asetetaan muuttujan selectedButton_ arvoksi nullptr, jotta mikään pai-
     // nike ei jää valituksi.
     selectedButton_ = nullptr;
 
-    for (int i = 0; i < 12; i++ )
+    for ( int i = 0; i < 12; i++ )
     {
         delete buttons_.at(i);
     }
 
     resetGameBoard();
-
 
 }
 
@@ -772,8 +743,8 @@ void MainWindow::resetGame()
 void MainWindow::updateLcd()
 {
     time_++;
-    ui->lcdNumberMin->display(time_/60);
-    ui->lcdNumberSec->display(time_%60);
+    ui->lcdNumberMin->display(time_ / 60);
+    ui->lcdNumberSec->display(time_ % 60);
 
 }
 
@@ -791,7 +762,6 @@ void MainWindow::closeGame()
 void MainWindow::moveCounter()
 {
     amountOfMoves_++;
-
     ui->lcdNumberMoveCounter->display(amountOfMoves_);
 
 }
